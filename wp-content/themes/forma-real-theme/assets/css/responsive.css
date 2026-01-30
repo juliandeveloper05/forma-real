@@ -1,0 +1,96 @@
+/* Responsive Utilities & Grid System */
+
+/* Responsive breakpoints */
+@media (min-width: 768px) {
+    .md\:block { display: block !important; }
+    .md\:hidden { display: none !important; }
+    
+    .md\:flex-row { flex-direction: row !important; }
+    
+    .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    
+    .md\:col-span-1 { grid-column: span 1 / span 1; }
+    .md\:col-span-2 { grid-column: span 2 / span 2; }
+    
+    .md\:w-auto { width: auto !important; }
+    
+    .md\:text-left { text-align: left !important; }
+}
+
+@media (min-width: 1024px) {
+    .lg\:block { display: block !important; }
+    .lg\:hidden { display: none !important; }
+    
+    .lg\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .lg\:col-span-3 { grid-column: span 3 / span 3; }
+}
+
+/* Base Grid */
+.grid {
+    display: grid;
+    width: 100%;
+}
+
+.grid-cols-1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.gap-4 { gap: 1rem; }
+.gap-6 { gap: 1.5rem; }
+.gap-8 { gap: 2rem; }
+
+/* Flex Utilities */
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-row { flex-direction: row; }
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.justify-end { justify-content: flex-end; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+.shrink-0 { flex-shrink: 0; }
+.flex-grow { flex-grow: 1; }
+.w-full { width: 100%; }
+
+/* Mobile First Adjustments */
+.hide-mobile { display: none; }
+@media (min-width: 768px) {
+    .hide-mobile { display: inline-block; }
+}
+
+/* Margin/Padding Utils */
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+.mr-2 { margin-right: 0.5rem; }
+.pt-4 { padding-top: 1rem; }
+.py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+
+/* Text Utils */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.font-bold { font-weight: 700; }
+.text-xs { font-size: 0.75rem; }
+.text-sm { font-size: 0.875rem; }
+.text-xl { font-size: 1.25rem; }
+.text-2xl { font-size: 1.5rem; }
+.text-gray-400 { color: #9ca3af; }
+.text-gray-500 { color: #6b7280; }
+.text-gray-600 { color: #4b5563; }
+.text-gray-900 { color: #111827; }
+
+/* Rounded */
+.rounded-lg { border-radius: 0.5rem; }
+.rounded-full { border-radius: 9999px; }
+
+/* Dialog backdrop fix for some browsers */
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+}
