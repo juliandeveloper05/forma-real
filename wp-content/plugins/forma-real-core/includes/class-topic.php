@@ -45,6 +45,26 @@ class FR_Topic {
     }
     
     /**
+     * Obtener topics por foro con paginación
+     */
+    public function get_by_forum($forum_id, $page = 1, $per_page = 20) {
+        global $wpdb;
+        $table = $this->db->get_table('topics');
+        $offset = ($page - 1) * $per_page;
+        
+        return $wpdb->get_results($wpdb->prepare(
+            "SELECT t.*, u.display_name as author_name, u.user_email as author_email
+             FROM {$table} t
+             LEFT JOIN {$wpdb->users} u ON t.user_id = u.ID
+             WHERE t.forum_id = %d 
+             AND t.status = 'approved'
+             ORDER BY t.is_sticky DESC, t.last_active_time DESC
+             LIMIT %d OFFSET %d",
+            $forum_id, $per_page, $offset
+        ));
+    }
+
+    /**
      * Obtener topics recientes
      */
     public function get_recent_topics($limit = 20, $offset = 0) {
