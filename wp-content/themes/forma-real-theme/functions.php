@@ -38,8 +38,8 @@ function fr_enqueue_scripts() {
     );
     // Main JS
     wp_enqueue_script('forma-real-js', get_template_directory_uri() . '/assets/js/main.js', [], FR_THEME_VERSION, true);
-    // AJAX config
-    wp_localize_script('forma-real-js', 'fr_ajax_obj', [
+    // AJAX config (usando 'fr_ajax' para coincidir con los templates)
+    wp_localize_script('forma-real-js', 'fr_ajax', [
         'ajax_url' => admin_url('admin-ajax.php'),
         'nonce'    => wp_create_nonce('fr_nonce'),
     ]);
@@ -65,10 +65,16 @@ add_action('widgets_init', 'fr_widgets_init');
  * Routing & Permalinks
  */
 function fr_custom_rewrite_rules() {
+    // Forum routes
     add_rewrite_rule('^foro/?$',                            'index.php?fr_page=forum_index', 'top');
     add_rewrite_rule('^foro/([^/]+)/?$',                    'index.php?fr_page=forum_category&forum_slug=$matches[1]', 'top');
     add_rewrite_rule('^foro/([^/]+)/([^/]+)/?$',            'index.php?fr_page=forum_topic&forum_slug=$matches[1]&topic_slug=$matches[2]', 'top');
+    // User profile
     add_rewrite_rule('^perfil/([^/]+)/?$',                  'index.php?fr_page=user_profile&username=$matches[1]', 'top');
+    // Search
+    add_rewrite_rule('^buscar/?$',                          'index.php?fr_page=search', 'top');
+    // Moderation (admin only, but route exists)
+    add_rewrite_rule('^moderacion/?$',                      'index.php?fr_page=moderation', 'top');
 }
 add_action('init', 'fr_custom_rewrite_rules');
 
@@ -91,6 +97,8 @@ function fr_template_redirect() {
         'forum_category' => 'forum-category.php',
         'forum_topic'    => 'topic-single.php',
         'user_profile'   => 'profile.php',
+        'search'         => 'search-results.php',
+        'moderation'     => 'moderation-panel.php',
     ];
 
     if (isset($map[$fr_page])) {
@@ -99,3 +107,4 @@ function fr_template_redirect() {
     }
 }
 add_action('template_redirect', 'fr_template_redirect');
+

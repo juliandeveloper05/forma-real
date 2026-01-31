@@ -26,6 +26,9 @@ require_once FR_CORE_PATH . 'includes/class-reply.php';
 require_once FR_CORE_PATH . 'includes/class-user-profile.php';
 require_once FR_CORE_PATH . 'includes/class-helpers.php';
 require_once FR_CORE_PATH . 'includes/class-ajax-handler.php';
+require_once FR_CORE_PATH . 'includes/class-search.php';
+require_once FR_CORE_PATH . 'includes/class-moderation.php';
+require_once FR_CORE_PATH . 'includes/class-notification.php';
 
 /**
  * Clase principal del Plugin (Singleton)
