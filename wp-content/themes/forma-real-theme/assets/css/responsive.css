@@ -1,96 +1,94 @@
-/* Responsive Utilities & Grid System */
+/* ==========================================================================
+   RESPONSIVE — Mobile First
+   ========================================================================== */
 
-/* Responsive breakpoints */
-@media (min-width: 768px) {
-    .md\:block { display: block !important; }
-    .md\:hidden { display: none !important; }
-    
-    .md\:flex-row { flex-direction: row !important; }
-    
-    .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    
-    .md\:col-span-1 { grid-column: span 1 / span 1; }
-    .md\:col-span-2 { grid-column: span 2 / span 2; }
-    
-    .md\:w-auto { width: auto !important; }
-    
-    .md\:text-left { text-align: left !important; }
+/* ── MOBILE DEFAULTS (< 640px) ── */
+.site-navigation { display: none; }
+.user-pill .user-name { display: none; }
+
+/* Hero */
+.hero { padding: 3.5rem 0 3rem; }
+.hero h1 { letter-spacing: -0.8px; }
+
+/* Activity card: stack on tiny screens */
+.ac-replies { border-left: none; padding-left: 0; border-top: 1px solid var(--color-border); padding-top: 0.55rem; margin-top: 0.55rem; flex-direction: row; gap: 0.4rem; align-items: center; }
+.ac-replies .num { font-size: 0.9rem; }
+
+/* Forum card: stack */
+.forum-card { flex-wrap: wrap; }
+.forum-arrow { display: none; }
+
+/* Topic card: hide stats on mobile, show summary */
+.tc-stats { display: none; }
+.tc-main { padding: 0.8rem; }
+
+/* Thread: hide desktop author, show mobile */
+.post-author { display: none; }
+.post-author-mobile { display: flex; }
+.post-body { flex-direction: column; gap: 0; padding: 0.9rem; }
+
+/* Reply form */
+.reply-avatar { display: none; }
+
+/* Category header */
+.cat-header { padding: 1.2rem; }
+.cat-icon { width: 46px; height: 46px; font-size: 1.35rem; }
+
+/* Profile */
+.profile-stats-row { gap: 1.5rem; }
+
+/* Footer */
+.footer-grid { grid-template-columns: 1fr; gap: 1.75rem; }
+
+/* Stats bar */
+.stats-bar > .container { gap: 1.25rem; }
+.stat-item { gap: 0.5rem; }
+
+/* ── TABLET (≥ 640px) ── */
+@media (min-width: 640px) {
+    .user-pill .user-name { display: block; }
+    .ac-replies { border-left: 1px solid var(--color-border); border-top: none; padding-left: 1.25rem; padding-top: 0; margin-top: 0; flex-direction: column; gap: 0; align-items: center; }
+
+    /* Topic card stats appear */
+    .tc-stats { display: flex; }
 }
 
+/* ── DESKTOP (≥ 768px) ── */
+@media (min-width: 768px) {
+    .site-navigation { display: flex; }
+
+    /* Hero vertical rhythm */
+    .hero { padding: 5.5rem 0 4.5rem; }
+
+    /* Thread: show desktop author, hide mobile */
+    .post-author { display: flex; }
+    .post-author-mobile { display: none; }
+    .post-body { flex-direction: row; gap: 1.25rem; padding: 1.1rem; }
+
+    /* Reply form avatar */
+    .reply-avatar { display: block; }
+
+    /* Footer grid */
+    .footer-grid { grid-template-columns: 1.6fr 1fr 1fr; }
+}
+
+/* ── WIDE (≥ 1024px) ── */
 @media (min-width: 1024px) {
-    .lg\:block { display: block !important; }
-    .lg\:hidden { display: none !important; }
-    
-    .lg\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-    .lg\:col-span-3 { grid-column: span 3 / span 3; }
+    /* Topic single: main + sidebar layout */
+    .topic-page-grid {
+        display: grid;
+        grid-template-columns: 1fr 280px;
+        gap: 1.75rem;
+    }
+    .topic-page-sidebar { display: block; }
+
+    /* Forum card arrow back */
+    .forum-arrow { display: flex; }
 }
 
-/* Base Grid */
-.grid {
-    display: grid;
-    width: 100%;
-}
-
-.grid-cols-1 {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-}
-
-.gap-4 { gap: 1rem; }
-.gap-6 { gap: 1.5rem; }
-.gap-8 { gap: 2rem; }
-
-/* Flex Utilities */
-.flex { display: flex; }
-.flex-col { flex-direction: column; }
-.flex-row { flex-direction: row; }
-.items-center { align-items: center; }
-.items-start { align-items: flex-start; }
-.justify-between { justify-content: space-between; }
-.justify-center { justify-content: center; }
-.justify-end { justify-content: flex-end; }
-.gap-2 { gap: 0.5rem; }
-.gap-3 { gap: 0.75rem; }
-.gap-4 { gap: 1rem; }
-.shrink-0 { flex-shrink: 0; }
-.flex-grow { flex-grow: 1; }
-.w-full { width: 100%; }
-
-/* Mobile First Adjustments */
-.hide-mobile { display: none; }
-@media (min-width: 768px) {
-    .hide-mobile { display: inline-block; }
-}
-
-/* Margin/Padding Utils */
-.mb-1 { margin-bottom: 0.25rem; }
-.mb-2 { margin-bottom: 0.5rem; }
-.mb-4 { margin-bottom: 1rem; }
-.mb-6 { margin-bottom: 1.5rem; }
-.mb-8 { margin-bottom: 2rem; }
-.mr-2 { margin-right: 0.5rem; }
-.pt-4 { padding-top: 1rem; }
-.py-8 { padding-top: 2rem; padding-bottom: 2rem; }
-.p-4 { padding: 1rem; }
-.p-6 { padding: 1.5rem; }
-
-/* Text Utils */
-.text-center { text-align: center; }
-.text-right { text-align: right; }
-.font-bold { font-weight: 700; }
-.text-xs { font-size: 0.75rem; }
-.text-sm { font-size: 0.875rem; }
-.text-xl { font-size: 1.25rem; }
-.text-2xl { font-size: 1.5rem; }
-.text-gray-400 { color: #9ca3af; }
-.text-gray-500 { color: #6b7280; }
-.text-gray-600 { color: #4b5563; }
-.text-gray-900 { color: #111827; }
-
-/* Rounded */
-.rounded-lg { border-radius: 0.5rem; }
-.rounded-full { border-radius: 9999px; }
-
-/* Dialog backdrop fix for some browsers */
-dialog::backdrop {
-    background: rgba(0, 0, 0, 0.5);
+/* ── PRINT ── */
+@media print {
+    .site-header, .site-footer, .reply-section, .user-actions { display: none !important; }
+    .site-main { padding: 0; }
+    body { background: #fff; }
 }

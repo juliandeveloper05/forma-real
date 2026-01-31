@@ -5,55 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php wp_head(); ?>
 </head>
-
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 
-<header class="site-header">
-    <div class="container flex justify-between items-center w-full h-full">
-        
+<header class="site-header" id="site-header">
+    <div class="container">
+
         <!-- Logo -->
         <div class="site-branding">
             <?php if (has_custom_logo()) : ?>
                 <?php the_custom_logo(); ?>
             <?php else : ?>
-                <h1 class="site-title text-xl font-bold">
-                    <a href="<?php echo esc_url(home_url('/')); ?>" rel="home" class="text-secondary hover:text-primary">
-                        Forma Real
-                    </a>
+                <h1 class="site-title">
+                    <a href="<?php echo esc_url(home_url('/')); ?>" rel="home">Forma Real</a>
                 </h1>
             <?php endif; ?>
         </div>
 
-        <!-- Navigation -->
-        <nav class="site-navigation hidden md:block">
+        <!-- Primary Nav -->
+        <nav class="site-navigation" aria-label="Navegación principal">
             <?php
             wp_nav_menu([
                 'theme_location' => 'primary',
-                'menu_id'        => 'primary-menu',
                 'container'      => false,
-                'menu_class'     => 'flex space-x-6 font-medium text-sm',
+                'menu_class'     => '',
                 'fallback_cb'    => false,
             ]);
             ?>
         </nav>
 
         <!-- User Actions -->
-        <div class="user-actions flex items-center gap-4">
+        <div class="user-actions">
             <?php if (is_user_logged_in()) : ?>
-                <?php $current_user = wp_get_current_user(); ?>
-                <a href="<?php echo home_url('/perfil'); ?>" class="flex items-center gap-2">
-                    <span class="text-sm font-medium hide-mobile"><?php echo esc_html($current_user->display_name); ?></span>
-                    <div class="w-8 h-8 rounded-full overflow-hidden bg-gray-200">
-                        <?php echo get_avatar($current_user->ID, 32); ?>
-                    </div>
+                <?php $u = wp_get_current_user(); ?>
+                <a href="<?php echo esc_url(home_url('/perfil/' . $u->user_login)); ?>" class="user-pill">
+                    <?php echo get_avatar($u->ID, 30, '', '', ['echo' => false, 'class' => '']); ?>
+                    <span class="user-name"><?php echo esc_html($u->display_name); ?></span>
                 </a>
             <?php else : ?>
-                <a href="<?php echo wp_login_url(); ?>" class="text-sm font-medium hover:text-primary">Entrar</a>
-                <a href="<?php echo wp_registration_url(); ?>" class="btn btn-primary btn-sm">Registro</a>
+                <a href="<?php echo esc_url(wp_login_url()); ?>" class="btn-login">Entrar</a>
+                <a href="<?php echo esc_url(wp_registration_url()); ?>" class="btn btn-primary btn-sm">Registro</a>
             <?php endif; ?>
         </div>
-        
+
     </div>
 </header>
 

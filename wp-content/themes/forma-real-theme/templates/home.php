@@ -1,88 +1,131 @@
 <?php
 /**
- * Template Name: Home Page Landing
+ * Template: Home Page
  */
+get_header();
 
-get_header(); 
+$topic_handler  = new FR_Topic();
+$recent_topics  = $topic_handler->get_recent_topics(6);
 
-// Obtener últimos temas destacados para la home
-$topic_handler = new FR_Topic();
-$recent_topics = $topic_handler->get_recent_topics(5);
+// Quick stats — pull from DB
+global $wpdb;
+$total_topics  = (int) $wpdb->get_var("SELECT SUM(topic_count) FROM {$wpdb->prefix}fr_forums WHERE is_active = 1");
+$total_replies = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}fr_replies WHERE status = 'approved'");
+$total_members = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}users");
 ?>
 
-<!-- Hero Section -->
-<section class="bg-white border-b border-gray-200 py-16 md:py-24">
-    <div class="container text-center max-w-3xl">
-        <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-6">
-            Fitness Real, Resultados Reales.
-        </h1>
-        <p class="text-lg text-gray-600 mb-8">
-            Una comunidad donde la experiencia supera a la teoría. Comparte tus rutinas, resuelve dudas y documenta tu progreso sin filtros.
-        </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="<?php echo home_url('/foro/'); ?>" class="btn btn-primary btn-lg px-8 py-3 text-lg">
-                Ir al Foro
-            </a>
-            <?php if (!is_user_logged_in()) : ?>
-                <a href="<?php echo wp_registration_url(); ?>" class="btn btn-outline btn-lg px-8 py-3 text-lg">
-                    Unirse ahora
-                </a>
-            <?php endif; ?>
+<!-- ═══════════════════════════════════════ HERO ═══════════════════════════════════════ -->
+<section class="hero">
+    <div class="container">
+        <div class="hero-inner">
+
+            <!-- Live badge -->
+            <div class="hero-badge">
+                <span class="live-dot"></span>
+                Comunidad activa · <?php echo number_format($total_members); ?> miembros
+            </div>
+
+            <h1>Fitness <span class="grad">Real</span>,<br>Resultados Reales.</h1>
+
+            <p>Una comunidad donde la experiencia supera a la teoría. Comparte tus rutinas, resuelve dudas y documenta tu progreso sin filtros.</p>
+
+            <div class="hero-ctas">
+                <a href="<?php echo esc_url(home_url('/foro/')); ?>" class="btn btn-primary btn-lg">Explorar el Foro</a>
+                <?php if (!is_user_logged_in()) : ?>
+                    <a href="<?php echo esc_url(wp_registration_url()); ?>" class="btn btn-ghost btn-lg">Unirse gratis</a>
+                <?php endif; ?>
+            </div>
+
         </div>
     </div>
 </section>
 
-<!-- Recent Activity Section -->
-<section class="py-16 bg-gray-50">
+<!-- ═══════════════════════════════════════ STATS BAR ═══════════════════════════════════════ -->
+<div class="stats-bar">
     <div class="container">
-        <div class="flex justify-between items-end mb-8">
+        <div class="stat-item">
+            <div class="stat-icon">💬</div>
             <div>
-                <h2 class="text-2xl font-bold text-gray-900">Actividad Reciente</h2>
-                <p class="text-gray-500">Lo que está pasando ahora mismo en la comunidad.</p>
+                <div class="stat-value"><?php echo number_format($total_topics); ?></div>
+                <div class="stat-label">Temas</div>
             </div>
-            <a href="<?php echo home_url('/foro/'); ?>" class="text-primary font-medium hover:underline">Ver todo &rarr;</a>
+        </div>
+        <div class="stat-item">
+            <div class="stat-icon">📝</div>
+            <div>
+                <div class="stat-value"><?php echo number_format($total_replies); ?></div>
+                <div class="stat-label">Respuestas</div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-icon">👥</div>
+            <div>
+                <div class="stat-value"><?php echo number_format($total_members); ?></div>
+                <div class="stat-label">Miembros</div>
+            </div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-icon">📂</div>
+            <div>
+                <div class="stat-value">4</div>
+                <div class="stat-label">Categorías</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════ ACTIVITY ═══════════════════════════════════════ -->
+<section class="section">
+    <div class="container">
+
+        <div class="section-head">
+            <div>
+                <h2>Actividad Reciente</h2>
+                <p class="sub">Lo que está pasando en la comunidad</p>
+            </div>
+            <a href="<?php echo esc_url(home_url('/foro/')); ?>" class="section-link">Ver todo →</a>
         </div>
 
-        <div class="grid grid-cols-1 gap-4">
+        <div class="space-y-3">
             <?php if ($recent_topics) : ?>
                 <?php foreach ($recent_topics as $topic) : ?>
-                    <div class="card p-4 hover:border-gray-300 transition-colors">
-                        <div class="flex gap-4">
-                            <!-- Avatar -->
-                            <div class="shrink-0">
-                                <?php echo get_avatar($topic->user_id, 48, '', '', ['class' => 'rounded-full']); ?>
-                            </div>
-                            
-                            <!-- Content -->
-                            <div class="flex-grow min-w-0">
-                                <h3 class="text-lg font-semibold truncate">
-                                    <a href="<?php echo home_url('/foro/' . $topic->forum_slug . '/' . $topic->slug); ?>" class="text-gray-900 hover:text-primary">
-                                        <?php echo esc_html($topic->title); ?>
-                                    </a>
-                                </h3>
-                                <div class="text-sm text-gray-500 flex flex-wrap gap-2 items-center mt-1">
-                                    <span>por <span class="font-medium text-gray-700"><?php echo esc_html($topic->author_name); ?></span></span>
-                                    <span>&bull;</span>
-                                    <span>en <a href="<?php echo home_url('/foro/' . $topic->forum_slug); ?>" class="text-gray-700 hover:underline"><?php echo esc_html($topic->forum_name); ?></a></span>
-                                    <span>&bull;</span>
-                                    <span><?php echo FR_Helpers::time_ago($topic->created_at); ?></span>
-                                </div>
-                            </div>
+                <div class="activity-card anim-up">
 
-                            <!-- Meta -->
-                            <div class="hidden sm:flex flex-col items-end justify-center text-sm text-gray-400 px-4 border-l border-gray-100">
-                                <div class="font-bold text-gray-600"><?php echo number_format($topic->reply_count); ?></div>
-                                <div class="text-xs">respuestas</div>
-                            </div>
+                    <div class="ac-avatar">
+                        <?php echo get_avatar($topic->user_id, 42, '', '', ['echo' => false]); ?>
+                    </div>
+
+                    <div class="ac-body">
+                        <div class="ac-title">
+                            <a href="<?php echo esc_url(home_url('/foro/' . $topic->forum_slug . '/' . $topic->slug)); ?>">
+                                <?php echo esc_html($topic->title); ?>
+                            </a>
+                        </div>
+                        <div class="ac-meta">
+                            <span>por <strong><?php echo esc_html($topic->author_name); ?></strong></span>
+                            <span class="dot"></span>
+                            <span>en <a href="<?php echo esc_url(home_url('/foro/' . $topic->forum_slug)); ?>"><?php echo esc_html($topic->forum_name); ?></a></span>
+                            <span class="dot"></span>
+                            <span><?php echo FR_Helpers::time_ago($topic->created_at); ?></span>
                         </div>
                     </div>
+
+                    <div class="ac-replies">
+                        <div class="num"><?php echo number_format($topic->reply_count); ?></div>
+                        <div class="lbl">resp.</div>
+                    </div>
+
+                </div>
                 <?php endforeach; ?>
             <?php else : ?>
-                <div class="text-center py-8 text-gray-500">
-                    Aún no hay actividad reciente. ¡Sé el primero en publicar!
+                <div class="empty-state">
+                    <span class="empty-icon">🏋️</span>
+                    <h3>Aún no hay actividad</h3>
+                    <p>¡Sé el primero en publicar en el foro!</p>
                 </div>
             <?php endif; ?>
         </div>
+
     </div>
 </section>
 

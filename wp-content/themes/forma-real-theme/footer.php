@@ -1,49 +1,55 @@
 
-</main> <!-- #primary -->
+</main><!-- #primary -->
 
-<footer class="site-footer bg-secondary text-white pt-12 pb-6">
+<footer class="site-footer">
     <div class="container">
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            <!-- Footer Area 1 -->
-            <div class="footer-widget">
-                <h3 class="text-lg font-bold mb-4">Sobre Forma Real</h3>
-                <p class="text-gray-400 text-sm">
-                    Comunidad de fitness real, sin filtros. Aprende, comparte y mejora tu salud con información basada en la experiencia.
-                </p>
-            </div>
-            
-            <!-- Footer Area 2 -->
-            <div class="footer-widget">
-                <h3 class="text-lg font-bold mb-4">Enlaces Rápidos</h3>
-                <?php
-                wp_nav_menu([
-                    'theme_location' => 'footer',
-                    'menu_class'     => 'footer-links space-y-2 text-sm text-gray-400',
-                    'container'      => false,
-                ]);
-                ?>
-            </div>
-            
-            <!-- Footer Area 3 -->
-            <div class="footer-widget">
-                <h3 class="text-lg font-bold mb-4">Síguenos</h3>
-                <div class="flex space-x-4">
-                    <!-- Social Icons placeholder -->
-                    <a href="#" class="text-gray-400 hover:text-white">Instagram</a>
-                    <a href="#" class="text-gray-400 hover:text-white">Twitter</a>
+
+        <div class="footer-grid">
+
+            <!-- Brand column -->
+            <div class="footer-brand">
+                <div class="fb-logo">Forma Real</div>
+                <p>Comunidad de fitness real, sin filtros. Aprende, comparte y mejora tu salud con información basada en la experiencia real.</p>
+                <div class="footer-social" style="margin-top:1rem;">
+                    <a href="#">Instagram</a>
+                    <a href="#">Twitter</a>
+                    <a href="#">YouTube</a>
                 </div>
             </div>
+
+            <!-- Links -->
+            <div class="footer-col">
+                <h4>Explorar</h4>
+                <ul>
+                    <li><a href="<?php echo esc_url(home_url('/foro/')); ?>">Foro</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/foro/rutinas')); ?>">Rutinas</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/foro/nutricion')); ?>">Nutrición</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/foro/suplementos')); ?>">Suplementos</a></li>
+                    <li><a href="<?php echo esc_url(home_url('/foro/motivacion')); ?>">Motivación</a></li>
+                </ul>
+            </div>
+
+            <!-- Resources -->
+            <div class="footer-col">
+                <h4>Recursos</h4>
+                <ul>
+                    <li><a href="<?php echo esc_url(wp_login_url()); ?>">Iniciar sesión</a></li>
+                    <li><a href="<?php echo esc_url(wp_registration_url()); ?>">Registrarse</a></li>
+                    <li><a href="#">Términos de uso</a></li>
+                    <li><a href="#">Política de privacidad</a></li>
+                </ul>
+            </div>
+
         </div>
-        
-        <div class="border-t border-gray-800 pt-6 text-center text-sm text-gray-500">
-            &copy; <?php echo date('Y'); ?> Forma Real. Todos los derechos reservados.
+
+        <div class="footer-bottom">
+            <span>&copy; <?php echo date('Y'); ?> Forma Real. Todos los derechos reservados.</span>
+            <span>Construido con WordPress</span>
         </div>
-        
+
     </div>
 </footer>
 
 <?php wp_footer(); ?>
-
 </body>
 </html>

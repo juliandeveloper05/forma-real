@@ -1,93 +1,78 @@
 /**
- * Forma Real - Main JS
- * Manejo de formularios AJAX y utilidades
+ * Forma Real — Main JS v2.0
  */
+(function() {
+    'use strict';
 
-document.addEventListener('DOMContentLoaded', function() {
-    
-    // Configuración AJAX desde wp_localize_script
-    const ajaxUrl = fr_ajax_obj.ajax_url;
-    const nonce = fr_ajax_obj.nonce;
-
-    /**
-     * Handler: Crear Topic
-     */
-    const createTopicForm = document.getElementById('create-topic-form');
-    if (createTopicForm) {
-        createTopicForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const button = this.querySelector('button[type="submit"]');
-            const originalText = button.innerText;
-            button.disabled = true;
-            button.innerText = 'Publicando...';
-
-            const formData = new FormData(this);
-            formData.append('nonce', nonce);
-
-            fetch(ajaxUrl, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Redirigir al nuevo tema
-                    window.location.href = data.data.redirect_url;
-                } else {
-                    alert('Error: ' + data.data.message);
-                    button.disabled = false;
-                    button.innerText = originalText;
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Ocurrió un error inesperado.');
-                button.disabled = false;
-                button.innerText = originalText;
-            });
+    // ── Header scroll shadow ──
+    const header = document.getElementById('site-header');
+    if (header) {
+        let ticking = false;
+        window.addEventListener('scroll', function() {
+            if (!ticking) {
+                requestAnimationFrame(function() {
+                    header.classList.toggle('scrolled', window.scrollY > 24);
+                    ticking = false;
+                });
+                ticking = true;
+            }
         });
     }
 
-    /**
-     * Handler: Crear Reply
-     */
-    const createReplyForm = document.getElementById('create-reply-form');
-    if (createReplyForm) {
-        createReplyForm.addEventListener('submit', function(e) {
-            e.preventDefault();
+    // ── AJAX config ──
+    const cfg = window.fr_ajax_obj || {};
+    const ajaxUrl = cfg.ajax_url;
+    const nonce   = cfg.nonce;
 
-            const button = this.querySelector('button[type="submit"]');
-            const originalText = button.innerText;
-            button.disabled = true;
-            button.innerText = 'Publicando...';
+    // ── Helper: submit form via fetch ──
+    function submitForm(form, onSuccess, onError) {
+        const btn = form.querySelector('button[type="submit"]');
+        const origText = btn ? btn.textContent : '';
 
-            const formData = new FormData(this);
-            formData.append('nonce', nonce);
+        if (btn) { btn.disabled = true; btn.textContent = 'Publicando…'; }
 
-            fetch(ajaxUrl, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
+        const fd = new FormData(form);
+        fd.append('nonce', nonce);
+
+        fetch(ajaxUrl, { method: 'POST', body: fd })
+            .then(r => r.json())
             .then(data => {
                 if (data.success) {
-                    // Recargar la página para ver la nueva respuesta (MVP solution)
-                    // Idealmente insertaríamos el HTML devuelto sin recargar
-                    window.location.reload();
+                    onSuccess(data.data);
                 } else {
-                    alert('Error: ' + data.data.message);
-                    button.disabled = false;
-                    button.innerText = originalText;
+                    if (btn) { btn.disabled = false; btn.textContent = origText; }
+                    if (onError) onError(data.data);
                 }
             })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Ocurrió un error inesperado.');
-                button.disabled = false;
-                button.innerText = originalText;
+            .catch(err => {
+                console.error('Forma Real AJAX error:', err);
+                if (btn) { btn.disabled = false; btn.textContent = origText; }
+                if (onError) onError({ message: 'Error de conexión. Intenta de nuevo.' });
             });
+    }
+
+    // ── Create Topic ──
+    const topicForm = document.getElementById('create-topic-form');
+    if (topicForm) {
+        topicForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            submitForm(this,
+                function(data) { window.location.href = data.redirect_url; },
+                function(data) { alert(data.message); }
+            );
         });
     }
 
-});
+    // ── Create Reply ──
+    const replyForm = document.getElementById('create-reply-form');
+    if (replyForm) {
+        replyForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            submitForm(this,
+                function() { window.location.reload(); },
+                function(data) { alert(data.message); }
+            );
+        });
+    }
+
+})();

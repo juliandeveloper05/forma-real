@@ -1,75 +1,63 @@
 <?php
 /**
- * Template Name: Forum Index
- * Muestra la lista de foros/categorías principales
+ * Template: Forum Index
  */
+get_header();
 
-get_header(); 
-
-// Instanciar controlador de foros
 $forum_handler = new FR_Forum();
 $forums = $forum_handler->get_all_forums();
 ?>
 
-<div class="container py-8">
-    
-    <div class="mb-8 text-center md:text-left">
-        <h1 class="text-3xl font-bold text-gray-900">Foros de Discusión</h1>
-        <p class="text-gray-500 mt-2">Únete a la conversación sobre entrenamiento real y nutrición.</p>
+<div class="container" style="padding-top: 2.5rem; padding-bottom: 4rem;">
+
+    <!-- Page Header -->
+    <div class="section-head" style="margin-bottom: 1.75rem;">
+        <div>
+            <h1 style="font-size: clamp(1.6rem, 3.5vw, 2.1rem);">Foros de Discusión</h1>
+            <p class="sub">Únete a la conversación sobre entrenamiento real y nutrición</p>
+        </div>
+        <?php if (is_user_logged_in()) : ?>
+            <!-- Optional: quick-create link could go here -->
+        <?php endif; ?>
     </div>
 
-    <!-- Lista de Foros -->
-    <div class="grid grid-cols-1 gap-6">
+    <!-- Forum List -->
+    <div class="space-y-3">
         <?php if ($forums) : ?>
             <?php foreach ($forums as $forum) : ?>
-                <div class="card hover:shadow-md transition-shadow">
-                    <div class="card-body flex items-start gap-4">
-                        
-                        <!-- Icono -->
-                        <div class="w-12 h-12 rounded-lg flex items-center justify-center shrink-0" 
-                             style="background-color: <?php echo esc_attr($forum->color); ?>20; color: <?php echo esc_attr($forum->color); ?>">
-                            <span class="text-2xl">
-                                <?php echo !empty($forum->icon) ? esc_html($forum->icon) : '💬'; ?>
-                            </span>
-                        </div>
-                        
-                        <!-- Contenido -->
-                        <div class="flex-grow">
-                            <h2 class="text-xl font-bold mb-1">
-                                <a href="<?php echo home_url('/foro/' . $forum->slug); ?>" class="text-gray-900 hover:text-primary">
-                                    <?php echo esc_html($forum->name); ?>
-                                </a>
-                            </h2>
-                            <p class="text-gray-600 text-sm mb-3">
-                                <?php echo esc_html($forum->description); ?>
-                            </p>
-                            
-                            <!-- Stats -->
-                            <div class="flex gap-4 text-xs text-gray-400 font-medium">
-                                <span class="flex items-center gap-1">
-                                    📄 <?php echo number_format($forum->topic_count); ?> temas
-                                </span>
-                                <span class="flex items-center gap-1">
-                                    💬 <?php echo number_format($forum->reply_count); ?> respuestas
-                                </span>
-                            </div>
-                        </div>
+            <a href="<?php echo esc_url(home_url('/foro/' . $forum->slug)); ?>" class="forum-card anim-up">
 
-                        <!-- Action (Desktop only) -->
-                        <div class="hidden md:block self-center">
-                            <a href="<?php echo home_url('/foro/' . $forum->slug); ?>" class="btn btn-outline btn-sm">
-                                Entrar
-                            </a>
-                        </div>
+                <!-- Icon -->
+                <div class="forum-icon" style="background-color: <?php echo esc_attr($forum->color); ?>15; color: <?php echo esc_attr($forum->color); ?>;">
+                    <?php echo !empty($forum->icon) ? esc_html($forum->icon) : '💬'; ?>
+                </div>
+
+                <!-- Info -->
+                <div class="forum-info">
+                    <div class="forum-name"><?php echo esc_html($forum->name); ?></div>
+                    <p class="forum-desc"><?php echo esc_html($forum->description); ?></p>
+                    <div class="forum-stats-row">
+                        <span class="forum-stat"><span>📄</span> <?php echo number_format($forum->topic_count); ?> temas</span>
+                        <span class="forum-stat"><span>💬</span> <?php echo number_format($forum->reply_count); ?> respuestas</span>
                     </div>
                 </div>
+
+                <!-- Arrow -->
+                <div class="forum-arrow">→</div>
+
+            </a>
             <?php endforeach; ?>
         <?php else : ?>
-            <div class="p-12 text-center border-2 border-dashed border-gray-200 rounded-lg">
-                <p class="text-gray-400 text-lg">No hay foros creados todavía.</p>
-                <?php if (current_user_can('manage_options')) : ?>
-                    <p class="mt-2 text-sm text-gray-500">Ve a la base de datos o crea un admin seeder para añadir foros.</p>
-                <?php endif; ?>
+            <div class="empty-state">
+                <span class="empty-icon">📭</span>
+                <h3>No hay foros aún</h3>
+                <p>
+                    <?php if (current_user_can('manage_options')) : ?>
+                        Ve a la base de datos y crea las categorías del foro.
+                    <?php else : ?>
+                        Vuelve pronto, estamos preparando el contenido.
+                    <?php endif; ?>
+                </p>
             </div>
         <?php endif; ?>
     </div>
