@@ -11,12 +11,19 @@
 
 ## ✨ Características
 
+### Core Features
 - 🏠 **Landing Page** moderna con diseño responsive
 - 💬 **Sistema de Foros** con categorías, temas y respuestas
 - 👤 **Perfiles de Usuario** con estadísticas y niveles
 - ⚡ **AJAX** para interacciones sin recargar la página
 - 📱 **Mobile-First** - Funciona perfecto en cualquier dispositivo
 - 🔐 **Seguridad** con nonces de WordPress y sanitización
+
+### Semana 5: Features Avanzadas ✨
+- 🔍 **Búsqueda FULLTEXT** - Busca en títulos y contenido de temas/respuestas
+- 🛡️ **Panel de Moderación** - Gestión de reportes (Ignorar, Advertir, Eliminar, Banear)
+- 🔔 **Notificaciones en Tiempo Real** - Alertas cuando responden a tus temas
+- 📊 **Sistema de Reportes** - Los usuarios pueden reportar contenido inapropiado
 
 ## 🛠️ Stack Tecnológico
 
@@ -44,7 +51,10 @@ forma-real/
 │   │       │   ├── class-reply.php
 │   │       │   ├── class-user-profile.php
 │   │       │   ├── class-helpers.php
-│   │       │   └── class-ajax-handler.php
+│   │       │   ├── class-ajax-handler.php
+│   │       │   ├── class-search.php        # 🔍 Búsqueda FULLTEXT
+│   │       │   ├── class-moderation.php    # 🛡️ Sistema de moderación
+│   │       │   └── class-notification.php  # 🔔 Notificaciones
 │   │       └── forma-real-core.php
 │   └── 📂 themes/
 │       └── forma-real-theme/ # Tema responsive
@@ -53,7 +63,11 @@ forma-real/
 │           │   ├── forum-index.php
 │           │   ├── forum-category.php
 │           │   ├── topic-single.php
-│           │   └── profile.php
+│           │   ├── profile.php
+│           │   ├── search-results.php      # 🔍 Resultados de búsqueda
+│           │   └── moderation-panel.php    # 🛡️ Panel de moderación
+│           ├── partials/
+│           │   └── notifications-dropdown.php  # 🔔 Dropdown de notificaciones
 │           ├── assets/
 │           │   ├── css/responsive.css
 │           │   └── js/main.js
@@ -105,6 +119,8 @@ forma-real/
 | Foro | `http://forma-real.test/foro/` |
 | Categoría | `http://forma-real.test/foro/rutinas/` |
 | Tema | `http://forma-real.test/foro/rutinas/rutina-favorita-hipertrofia` |
+| 🔍 Búsqueda | `http://forma-real.test/buscar/?q=rutina` |
+| 🛡️ Moderación | `http://forma-real.test/moderacion/` |
 
 ## 📊 Progreso del Proyecto
 
@@ -112,8 +128,21 @@ forma-real/
 - [x] **Semana 2:** Clases PHP (OOP)
 - [x] **Semana 3:** Theme y Frontend
 - [x] **Semana 4:** CSS y JavaScript
-- [ ] **Semana 5:** Búsqueda, Moderación, Notificaciones
+- [x] **Semana 5:** Búsqueda, Moderación, Notificaciones ✅
 - [ ] **Semana 6:** Documentación y Deploy
+
+## 🔌 API AJAX Endpoints
+
+| Endpoint | Descripción |
+|----------|-------------|
+| `fr_create_topic` | Crear nuevo tema |
+| `fr_create_reply` | Publicar respuesta |
+| `fr_search` | Búsqueda FULLTEXT (pública) |
+| `fr_report_content` | Reportar tema/respuesta |
+| `fr_get_notifications` | Obtener notificaciones |
+| `fr_mark_notification_read` | Marcar como leída |
+| `fr_mark_all_notifications_read` | Marcar todas como leídas |
+| `fr_review_report` | Acción de moderador |
 
 ## 🧪 Tecnologías Demostradas
 
@@ -123,6 +152,8 @@ Este proyecto demuestra competencia en:
 - **WordPress:** Hooks, AJAX, custom routing, templates
 - **MySQL:** Diseño de esquemas, relaciones, índices FULLTEXT
 - **Frontend:** CSS responsive, JavaScript moderno, fetch API
+- **Moderación:** Sistema de reportes y gestión de usuarios
+- **Notificaciones:** Sistema real-time con AJAX polling
 - **Git:** Control de versiones, commits semánticos
 
 ## 📝 Licencia
