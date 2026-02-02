@@ -1,0 +1,31 @@
+name: Deploy to InfinityFree
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'wp-content/themes/**'
+      - 'wp-content/plugins/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./wp-content/
+          server-dir: /htdocs/wp-content/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
