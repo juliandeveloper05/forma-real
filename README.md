@@ -1,167 +1,199 @@
-# 🏋️ Forma Real — Foro de Fitness con PHP/WordPress
+# 💪 Forma Real
 
-[![PHP](https://img.shields.io/badge/PHP-8.1+-777BB4?style=flat-square&logo=php&logoColor=white)](https://php.net)
-[![WordPress](https://img.shields.io/badge/WordPress-6.4+-21759B?style=flat-square&logo=wordpress&logoColor=white)](https://wordpress.org)
-[![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=flat-square&logo=mysql&logoColor=white)](https://mysql.com)
-[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+**A modern fitness community forum built with WordPress + Custom OOP Plugin Architecture**
 
-> Comunidad de fitness donde la experiencia supera a la teoría. Comparte rutinas, resuelve dudas y documenta tu progreso.
+[![WordPress](https://img.shields.io/badge/WordPress-6.9-blue.svg)](https://wordpress.org/)
+[![PHP](https://img.shields.io/badge/PHP-8.0+-purple.svg)](https://php.net/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-![Forma Real Preview](https://via.placeholder.com/800x400/0f172a/3b82f6?text=Forma+Real+-+Fitness+Forum)
+<p align="center">
+  <img src="docs/screenshots/home-hero.png" alt="Forma Real Homepage" width="800">
+</p>
 
-## ✨ Características
+## 🎯 Overview
 
-### Core Features
-- 🏠 **Landing Page** moderna con diseño responsive
-- 💬 **Sistema de Foros** con categorías, temas y respuestas
-- 👤 **Perfiles de Usuario** con estadísticas y niveles
-- ⚡ **AJAX** para interacciones sin recargar la página
-- 📱 **Mobile-First** - Funciona perfecto en cualquier dispositivo
-- 🔐 **Seguridad** con nonces de WordPress y sanitización
+**Forma Real** is a fully functional fitness community forum demonstrating advanced WordPress development skills. Built from scratch with a custom plugin architecture, custom database tables, and a modern UI design system.
 
-### Semana 5: Features Avanzadas ✨
-- 🔍 **Búsqueda FULLTEXT** - Busca en títulos y contenido de temas/respuestas
-- 🛡️ **Panel de Moderación** - Gestión de reportes (Ignorar, Advertir, Eliminar, Banear)
-- 🔔 **Notificaciones en Tiempo Real** - Alertas cuando responden a tus temas
-- 📊 **Sistema de Reportes** - Los usuarios pueden reportar contenido inapropiado
+### ✨ Key Features
 
-## 🛠️ Stack Tecnológico
+| Feature | Description |
+|---------|-------------|
+| 🏛️ **Custom Plugin Architecture** | OOP-based plugin with Singleton pattern, dependency injection |
+| 💾 **Custom Database Tables** | 6 custom tables for forums, topics, replies, notifications, profiles, reports |
+| 🔔 **Real-time Notifications** | Dropdown with unread count, mark as read, animated badges |
+| 🔍 **Full-text Search** | MySQL FULLTEXT search with relevance sorting |
+| 🛡️ **Moderation System** | Report queue, ban system, moderator actions |
+| 🎨 **Modern UI** | CSS variables, micro-animations, responsive design |
 
-| Categoría | Tecnología |
-|-----------|------------|
-| **Backend** | PHP 8.1+ (OOP) |
-| **CMS** | WordPress 6.4+ |
-| **Base de Datos** | MySQL 8.0 |
-| **Frontend** | HTML5, CSS3, JavaScript |
-| **Entorno Local** | Laragon |
+---
 
-## 📁 Estructura del Proyecto
+## 🏗️ Architecture
 
-```
-forma-real/
-├── 📂 database/
-│   └── schema.sql           # Esquema de base de datos
-├── 📂 wp-content/
-│   ├── 📂 plugins/
-│   │   └── forma-real-core/ # Plugin con lógica OOP
-│   │       ├── includes/
-│   │       │   ├── class-database.php
-│   │       │   ├── class-forum.php
-│   │       │   ├── class-topic.php
-│   │       │   ├── class-reply.php
-│   │       │   ├── class-user-profile.php
-│   │       │   ├── class-helpers.php
-│   │       │   ├── class-ajax-handler.php
-│   │       │   ├── class-search.php        # 🔍 Búsqueda FULLTEXT
-│   │       │   ├── class-moderation.php    # 🛡️ Sistema de moderación
-│   │       │   └── class-notification.php  # 🔔 Notificaciones
-│   │       └── forma-real-core.php
-│   └── 📂 themes/
-│       └── forma-real-theme/ # Tema responsive
-│           ├── templates/
-│           │   ├── home.php
-│           │   ├── forum-index.php
-│           │   ├── forum-category.php
-│           │   ├── topic-single.php
-│           │   ├── profile.php
-│           │   ├── search-results.php      # 🔍 Resultados de búsqueda
-│           │   └── moderation-panel.php    # 🛡️ Panel de moderación
-│           ├── partials/
-│           │   └── notifications-dropdown.php  # 🔔 Dropdown de notificaciones
-│           ├── assets/
-│           │   ├── css/responsive.css
-│           │   └── js/main.js
-│           ├── header.php
-│           ├── footer.php
-│           └── functions.php
-├── seeder.php               # Script de configuración automática
-├── INSTRUCCIONES.md         # Guía de instalación
-└── README.md
+```mermaid
+graph LR
+    A[Theme Templates] --> B[AJAX Handler]
+    B --> C[Core Classes]
+    C --> D[Database Layer]
+    D --> E[(MySQL Tables)]
 ```
 
-## 🚀 Instalación Rápida
+### Plugin Structure
 
-### Requisitos
-- PHP 8.1+
-- MySQL 8.0+
-- WordPress 6.4+
-- Laragon (recomendado para Windows)
+```
+forma-real-core/
+├── forma-real-core.php          # Main plugin file, activation hooks
+└── includes/
+    ├── class-database.php       # Singleton DB handler with CRUD
+    ├── class-forum.php          # Forum operations
+    ├── class-topic.php          # Topic CRUD + search
+    ├── class-reply.php          # Reply handling
+    ├── class-notification.php   # Notification system
+    ├── class-moderation.php     # Reports & bans
+    ├── class-search.php         # Full-text search
+    ├── class-ajax-handler.php   # REST-like AJAX endpoints
+    └── class-helpers.php        # Utilities (time_ago, etc.)
+```
 
-### Pasos
+---
 
-1. **Clona el repositorio**
-   ```bash
-   git clone https://github.com/juliandeveloper05/forma-real.git
-   ```
+## 🖥️ Screenshots
 
-2. **Copia los archivos a WordPress**
-   ```
-   wp-content/plugins/forma-real-core → tu-wordpress/wp-content/plugins/
-   wp-content/themes/forma-real-theme → tu-wordpress/wp-content/themes/
-   ```
+<details>
+<summary>Click to expand screenshots</summary>
 
-3. **Activa en WordPress Admin**
-   - Plugins → Activar "Forma Real Core"
-   - Apariencia → Temas → Activar "Forma Real Theme"
+### Homepage
+Modern hero section with community stats and recent activity.
 
-4. **Ejecuta el Seeder**
-   - Copia `seeder.php` a la raíz de WordPress
-   - Visita: `http://tu-sitio/seeder.php`
-   - ¡Listo! 🎉
+### Forum Index
+Category cards with topic counts and icons.
 
-> 📖 Para instrucciones detalladas, consulta [INSTRUCCIONES.md](INSTRUCCIONES.md)
+### Topic View
+Clean reading experience with author info and reply form.
 
-## 🎯 Demo
+### Notifications Dropdown
+Real-time notification badge with animated pulse.
 
-| Página | URL Local |
-|--------|-----------|
-| Inicio | `http://forma-real.test/` |
-| Foro | `http://forma-real.test/foro/` |
-| Categoría | `http://forma-real.test/foro/rutinas/` |
-| Tema | `http://forma-real.test/foro/rutinas/rutina-favorita-hipertrofia` |
-| 🔍 Búsqueda | `http://forma-real.test/buscar/?q=rutina` |
-| 🛡️ Moderación | `http://forma-real.test/moderacion/` |
+### Moderation Panel
+Admin queue for reviewing reported content.
 
-## 📊 Progreso del Proyecto
+</details>
 
-- [x] **Semana 1:** Setup y Base de Datos
-- [x] **Semana 2:** Clases PHP (OOP)
-- [x] **Semana 3:** Theme y Frontend
-- [x] **Semana 4:** CSS y JavaScript
-- [x] **Semana 5:** Búsqueda, Moderación, Notificaciones ✅
-- [ ] **Semana 6:** Documentación y Deploy
+---
 
-## 🔌 API AJAX Endpoints
+## 🔧 Tech Stack
 
-| Endpoint | Descripción |
+| Layer | Technology |
+|-------|------------|
+| **CMS** | WordPress 6.9 |
+| **Backend** | PHP 8.0+ (OOP, Prepared Statements) |
+| **Database** | MySQL with Custom Tables |
+| **Frontend** | Vanilla CSS + JavaScript |
+| **Fonts** | Barlow Condensed + Outfit (Google Fonts) |
+| **Icons** | Inline SVG |
+| **Dev Environment** | Laragon (Windows) |
+
+---
+
+## 🚀 Installation
+
+### Prerequisites
+- WordPress 6.0+
+- PHP 8.0+
+- MySQL 5.7+
+
+### Quick Start
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/juliandeveloper05/forma-real.git
+
+# 2. Copy to WordPress directory
+cp -r forma-real/wp-content/* /path/to/wordpress/wp-content/
+
+# 3. Activate the theme and plugin in WordPress Admin
+# - Appearance → Themes → Activate "Forma Real Theme"
+# - Plugins → Activate "Forma Real Core"
+
+# 4. Run the seeder (requires admin login)
+# Visit: http://your-site.test/seeder.php
+```
+
+---
+
+## 📚 Documentation
+
+| Document | Description |
 |----------|-------------|
-| `fr_create_topic` | Crear nuevo tema |
-| `fr_create_reply` | Publicar respuesta |
-| `fr_search` | Búsqueda FULLTEXT (pública) |
-| `fr_report_content` | Reportar tema/respuesta |
-| `fr_get_notifications` | Obtener notificaciones |
-| `fr_mark_notification_read` | Marcar como leída |
-| `fr_mark_all_notifications_read` | Marcar todas como leídas |
-| `fr_review_report` | Acción de moderador |
+| [Technical Docs](docs/TECHNICAL.md) | Architecture, database schema, AJAX endpoints |
+| [UI Update Guide](ACTUALIZACION_UI.md) | Design system and component updates |
+| [Installation Guide](INSTRUCCIONES.md) | Step-by-step setup instructions |
 
-## 🧪 Tecnologías Demostradas
+---
 
-Este proyecto demuestra competencia en:
+## 🔌 AJAX Endpoints
 
-- **PHP OOP:** Clases, Singleton, encapsulación
-- **WordPress:** Hooks, AJAX, custom routing, templates
-- **MySQL:** Diseño de esquemas, relaciones, índices FULLTEXT
-- **Frontend:** CSS responsive, JavaScript moderno, fetch API
-- **Moderación:** Sistema de reportes y gestión de usuarios
-- **Notificaciones:** Sistema real-time con AJAX polling
-- **Git:** Control de versiones, commits semánticos
+| Endpoint | Auth | Description |
+|----------|------|-------------|
+| `fr_create_topic` | ✅ | Create new forum topic |
+| `fr_create_reply` | ✅ | Add reply to topic |
+| `fr_search` | ❌ | Full-text search |
+| `fr_report_content` | ✅ | Report inappropriate content |
+| `fr_get_notifications` | ✅ | Fetch user notifications |
+| `fr_review_report` | 🛡️ | Moderator: process reports |
 
-## 📝 Licencia
+---
 
-MIT License - Siéntete libre de usar este código para aprender o como base para tus proyectos.
+## 🎨 Design System
+
+### Colors
+```css
+--color-primary: #2563eb    /* Blue */
+--color-success: #10b981    /* Green */
+--color-warning: #f59e0b    /* Yellow */
+--color-danger: #ef4444     /* Red */
+```
+
+### Typography
+- **Display:** Barlow Condensed (headings)
+- **Body:** Outfit (content)
+
+### Components
+- Cards with subtle shadows and border-radius
+- Animated badges and buttons
+- Glass-morphism effects on modals
+
+---
+
+## 🛣️ Roadmap
+
+- [x] Core forum functionality
+- [x] Notification system
+- [x] Moderation tools
+- [x] Full-text search
+- [x] Modern UI design
+- [ ] Dark mode toggle
+- [ ] Push notifications
+- [ ] User reputation system
+- [ ] Progressive Web App (PWA)
+
+---
+
+## 👨‍💻 Author
+
+**Julian** - Full Stack Developer
+
+- GitHub: [@juliandeveloper05](https://github.com/juliandeveloper05)
+- Portfolio: Coming soon
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
 <p align="center">
-  Desarrollado con 💪 por <a href="https://github.com/juliandeveloper05">Julian</a>
+  <strong>Built with 💪 for the fitness community</strong><br>
+  <sub>February 2026</sub>
 </p>
