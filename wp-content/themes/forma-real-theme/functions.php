@@ -108,3 +108,7 @@ function fr_template_redirect() {
 }
 add_action('template_redirect', 'fr_template_redirect');
 
+/**
+ * Load UI Seeder for cache management and theme initialization
+ */
+require_once get_template_directory() . '/inc/class-ui-seeder.php';
