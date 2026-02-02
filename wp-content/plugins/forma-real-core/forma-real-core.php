@@ -55,7 +55,11 @@ class Forma_Real_Core {
         
         // Inicializar componentes cuando WordPress carga
         add_action('plugins_loaded', [$this, 'init_components']);
+        
+        // Verificar si hay tablas pendientes de crear (para installs existentes)
+        add_action('admin_init', [$this, 'maybe_update_tables']);
     }
+
     
     public function init_components() {
         // Instanciar AJAX handler para escuchar peticiones
@@ -66,6 +70,14 @@ class Forma_Real_Core {
      * Tareas de activación: Crear tablas
      */
     public function activate() {
+        $this->create_tables();
+        flush_rewrite_rules();
+    }
+    
+    /**
+     * Crear o actualizar todas las tablas del plugin
+     */
+    public function create_tables() {
         global $wpdb;
         $charset_collate = $wpdb->get_charset_collate();
         
@@ -130,13 +142,78 @@ class Forma_Real_Core {
             FULLTEXT INDEX idx_content (content)
         ) $charset_collate;";
         
+        // Tabla Notifications
+        $sql_notifications = "CREATE TABLE {$wpdb->prefix}fr_notifications (
+            id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            user_id BIGINT UNSIGNED NOT NULL,
+            type VARCHAR(50) NOT NULL,
+            content TEXT NOT NULL,
+            link VARCHAR(500),
+            is_read TINYINT(1) DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            INDEX idx_user (user_id),
+            INDEX idx_unread (user_id, is_read),
+            INDEX idx_created (created_at)
+        ) $charset_collate;";
+        
+        // Tabla User Profiles
+        $sql_profiles = "CREATE TABLE {$wpdb->prefix}fr_user_profiles (
+            id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            user_id BIGINT UNSIGNED NOT NULL UNIQUE,
+            bio TEXT,
+            location VARCHAR(100),
+            website VARCHAR(255),
+            social_links TEXT,
+            avatar_url VARCHAR(500),
+            cover_url VARCHAR(500),
+            topic_count INT DEFAULT 0,
+            reply_count INT DEFAULT 0,
+            reputation INT DEFAULT 0,
+            last_active DATETIME,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_user (user_id),
+            INDEX idx_reputation (reputation)
+        ) $charset_collate;";
+        
+        // Tabla Reports (moderación)
+        $sql_reports = "CREATE TABLE {$wpdb->prefix}fr_reports (
+            id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+            reporter_id BIGINT UNSIGNED NOT NULL,
+            reported_type ENUM('topic', 'reply', 'user') NOT NULL,
+            reported_id BIGINT UNSIGNED NOT NULL,
+            reason VARCHAR(100) NOT NULL,
+            details TEXT,
+            status ENUM('pending', 'reviewed', 'resolved', 'dismissed') DEFAULT 'pending',
+            moderator_id BIGINT UNSIGNED NULL,
+            moderator_notes TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            resolved_at DATETIME NULL,
+            INDEX idx_status (status),
+            INDEX idx_reporter (reporter_id),
+            INDEX idx_reported (reported_type, reported_id)
+        ) $charset_collate;";
+        
         // Ejecutar dbDelta para crear/actualizar tablas
         dbDelta($sql_forums);
         dbDelta($sql_topics);
         dbDelta($sql_replies);
+        dbDelta($sql_notifications);
+        dbDelta($sql_profiles);
+        dbDelta($sql_reports);
         
-        // Flush rules por si registramos rutas personalizadas (que lo haremos)
-        flush_rewrite_rules();
+        // Marcar versión de DB para futuras migraciones
+        update_option('fr_core_db_version', '1.1.0');
+    }
+    
+    /**
+     * Verificar y actualizar tablas en admin_init (para installs existentes)
+     */
+    public function maybe_update_tables() {
+        $current_version = get_option('fr_core_db_version', '1.0.0');
+        if (version_compare($current_version, '1.1.0', '<')) {
+            $this->create_tables();
+        }
     }
     
     public function deactivate() {
